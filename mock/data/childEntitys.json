@@ -1,0 +1,23 @@
+[
+  {
+    "entitykey": 1001,
+    "serial": "zhouzhenzhuji1",
+    "name": "Root.Device1",
+    "assertname": "卓振主机1号",
+    "description": "卓振主机1号",
+    "address": "",
+    "parentid": 100,
+    "system": 0,
+    "location": 0,
+    "region": 0,
+    "entitytype": 12,
+    "alarmupdate": false,
+    "agentkey": 1,
+    "deleted": false,
+    "displayorder": 1,
+    "inhibit": false,
+    "lastoperatorid": 0,
+    "lastoperatortime": "2018-01-23 1124:59:48",
+    "childcount": 7
+  }
+]

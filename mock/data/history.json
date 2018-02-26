@@ -1,0 +1,27 @@
+[
+  {
+    "entitykey": 2,
+    "field": "0",
+    "quality": 0,
+    "updatetime": 1516699104000,
+    "manuallyvalue": "111",
+    "dpsKey": null
+  },
+  {
+    "entitykey": 2,
+    "field": "0",
+    "quality": 0,
+    "updatetime": 1516699110000,
+    "manuallyvalue": "222",
+    "dpsKey": null
+  },
+  {
+    "entitykey": 2,
+    "field": "rrrrr",
+    "quality": 1,
+    "updatetime": 1516771318000,
+    "manuallyvalue": "1111",
+    "dpsKey": null
+  }
+]
+

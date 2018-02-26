@@ -1,0 +1,23 @@
+[
+  {
+    "entitykey": 100,
+    "serial": "Root",
+    "name": "Root",
+    "assertname": "Root",
+    "description": "Root",
+    "address": "",
+    "parentid": 0,
+    "system": 0,
+    "location": 0,
+    "region": 0,
+    "entitytype": 1,
+    "alarmupdate": false,
+    "agentkey": 1,
+    "deleted": false,
+    "displayorder": 1,
+    "inhibit": false,
+    "lastoperatorid": 0,
+    "lastoperatortime": "2018-01-23 1124:59:48",
+    "childcount": 1
+  }
+]

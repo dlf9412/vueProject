@@ -1,0 +1,16 @@
+// entitykey改变
+export const ENTITYKEY_CHANGE = 'ENTITYKEY_CHANGE';
+// state改变
+export const CHASTATE_CHANGE = 'CHASTATE_CHANGE';
+// datatree改变
+export const DATATREE_CHANGE = 'DATATREE_CHANGE';
+// currentid改变
+export const CURRENTID_CHANGE = 'CURRENTID_CHANGE';
+
+export const SHOW_DATA_TREE_LOADING = 'SHOW_DATA_TREE_LOADING';
+
+export const HIDE_DATA_TREE_LOADING = 'HIDE_DATA_TREE_LOADING';
+
+export const START_TIME = 'START_TIME';
+
+export const CHILDENTITYS_CHANGE = 'CHILDENTITYS_CHANGE';

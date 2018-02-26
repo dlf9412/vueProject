@@ -1,0 +1,58 @@
+// 基础颜色
+//-------------------------------
+@white: #fff;
+@lighterGray: #eee;
+@lightGray: #ccc;
+@neutralGray: #aaa;
+@gray: #999;
+@darkGray: #666;
+@darkerGray: #333;
+@red: #d45b5b;
+
+// 计算属性
+@caculateFontSize: 20px;
+
+// 主题颜色
+//-------------------------------
+@themeColor: #283443;
+@themeColorLighter: lighten(@themeColor, 5%);
+@themeGray: #f2f2f2;
+@fontColor: @darkerGray;
+@linkColor: #42b983;
+@borderColor: #d2d2d2;
+@pageColor: @white;
+@shadowColor: rgba(0,0,0,0);
+
+
+// 系统全局设置，不包括具体细节颜色设置
+//-------------------------------
+@basicFontSize: 14px;
+@basicFontFamily: "Helvetica", "Microsoft Yahei", san-serif;
+@basicFontColor: @fontColor;
+@basicMargin: 10px;
+@basicPadding: @basicMargin;
+@headerHeight: 60px;
+@leftNavWidth: 160px;
+
+// 组件设置
+//-------------------------------
+
+// login
+@loginBgColor: lighten(@themeColor, 2%);
+@loginBtn: #424f60;
+@loginColor: @lightGray;
+
+// header
+@headerBgColor: @themeColor;
+@headerBorderColor: none;
+@headerShadow: @shadowColor;
+@headerColor: #c2c2c2;
+@headerFontSize: 20px;
+
+// sidenav
+@sidenavBgColor: @themeColorLighter;
+@sidenavCurrent: #20a0ff;
+
+// sysNotes
+@notesBgColor: @lighterGray;
+@notesBorderColor: @themeColor;
