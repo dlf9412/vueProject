@@ -3,7 +3,6 @@
     <el-row class="tac">
       <el-col :span="24"
               v-loading="loading"
-              element-loading-text="拼命加载中"
               element-loading-spinner="el-icon-loading"
               element-loading-background="rgba(0, 0, 0, 0.8)"
       >
@@ -95,11 +94,7 @@
   }
 
   .el-loading-spinner {
-    top: 10%;
-    margin-top: -21px;
     width: 100%;
-    text-align: center;
-    position: absolute;
   }
 
 </style>

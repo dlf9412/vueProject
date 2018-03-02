@@ -12,6 +12,8 @@ import OptionalModule from '../pages/template/main';
 import EquipmentDetail from '../pages/equipment';
 import AddChildEquipment from '../pages/device_tree';
 
+import Echa from "../components/echarts/test"
+
 Vue.use(Router);
 
 const AAAA = {
@@ -97,6 +99,10 @@ export default new Router({
         path: '/equipment',
         name: 'equipment',
         component: EquipmentDetail,
+      },
+      {
+        path:"/echa",
+        component:Echa
       }
     ],
 });

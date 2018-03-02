@@ -93,3 +93,10 @@ export const pushData = (data, responseData) => {
   }
   return newData;
 };
+
+export const assign = (target, source) => {
+  for (let obj in source) {
+    target[obj] = source[obj];
+  }
+  return target;
+};

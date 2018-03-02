@@ -13,13 +13,16 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          @change="dateChange"
+          @change="dataChange"
           format="yyyy 年 MM 月 dd 日"
-          value-format="yyyy-MM-dd,hh:mm:ss">
+          value-format="yyyy-MM-dd,hh:mm:ss"
+          :default-time="['12:00:00', '08:00:00']">
         </el-date-picker>
       </div>
     </div>
+    <el-progress :percentage="title" v-if="progressFlag" />
     <div :id="divId" class="echarts"></div>
+    <!-- <div :_id="divId" ></div> -->
   </div>
 </template>
 
@@ -30,8 +33,7 @@
   require('echarts/lib/component/tooltip');
   require('echarts/lib/component/title');
 
-  import options from "../../../mock/echarts/history1";
-  import { requestDataHistory, requestDateMap } from '../../framework/network/test';
+  import { requestDataHistory, requestDateMap, requestBeginTime } from '../../framework/network/test';
   let timer;
 
   export default {
@@ -40,7 +42,81 @@
     data() {
       return {
         divId: this.id,
-        chartOption: options,
+        chartOption: {
+          title: {
+            text: ''
+          },
+          tooltip: {
+            trigger: 'axis'
+          },
+          xAxis: {
+            data: []
+          },
+          yAxis: {
+            splitLine: {
+              show: false
+            }
+          },
+          toolbox: {
+            left: 'center',
+          },
+          dataZoom: [{
+            show: true
+          }, {
+            type: 'inside'
+          }],
+          visualMap: {
+            show: false,
+            top: 10,
+            right: 10,
+            pieces: [{
+              gt: 0,
+              lte: 200,
+              color: '#096'
+            }, {
+              gt: 200,
+              lte: 400,
+              color: '#ffde33'
+            }, {
+              gt: 400,
+              lte: 600,
+              color: '#ff9933'
+            }, {
+              gt: 600,
+              lte: 800,
+              color: '#cc0033'
+            }, {
+              gt: 800,
+              lte: 1000,
+              color: '#660099'
+            }, {
+              gt: 1000,
+              color: '#7e0023'
+            }],
+            outOfRange: {
+              color: '#999'
+            }
+          },
+          series: {
+            name: 'Beijing AQI',
+            type: 'line',
+            data: [],
+            markLine: {
+              silent: true,
+              data: [{
+                yAxis: 200
+              }, {
+                yAxis: 400
+              }, {
+                yAxis: 600
+              }, {
+                yAxis: 800
+              }, {
+                yAxis: 1000
+              }]
+            }
+          }
+        },
         currentId: 0,
         chastate: 0,
         firstrequest: true,
@@ -83,6 +159,7 @@
     },
     methods: {
       initEcharts(res){
+        this.myCharts.hideLoading();
         this.myCharts.setOption(res);
       },
       saveDate(res) {
@@ -112,6 +189,7 @@
           this.chartOption.series.data.splice(0, this.chartOption.series.data.length);
           this.chartOption.xAxis.data.splice(0, this.chartOption.xAxis.data.length);
           this.initEcharts(this.chartOption);
+          this.timeInterval = '';
           this.chastate = 0;
           this.currentId = 0;
         }
@@ -134,6 +212,7 @@
       },
       setTime(){
         this.chastate = 1;
+        this.firstrequest = true;
         this.acceptData();
         this.myCharts.showLoading({text:"读取数据中..."});
 
@@ -155,6 +234,7 @@
           cancelButtonText: '取消',
           beforeClose: (action, instance, done) => {
             if (action === 'confirm') {
+              this.chastate = 1;
               fun(res1,res2);
               done();
             } else {
@@ -168,93 +248,127 @@
           });
         });
       },
+      open(msg, fun) {
+        this.$alert(msg, '提示', {
+          confirmButtonText: '确定',
+          beforeClose:(action,instance,done)=>{
+            if(action==="confirm"){
+              fun();
+              done();
+            }
+
+          }
+        });
+      },
+      closeProgress(){
+        this.progressFlag=false;
+      },
       progressLoading(res1,res2){
         // 进度条和图表数据增加，判断当前页码和总页数是否相同
         let v1 = new Date(this.timeInterval[0]);
         let V1 = v1.getTime();
         let v2 = new Date(this.timeInterval[1]);
         let V2 = v2.getTime();
+        let pagenum = 0;
+
+        if(res1 > res2){
+          this.initEcharts(this.chartOption);
+          this.closeProgress();
+          this.open("当前数据已经加载完毕",function(){});
+
+          return
+        }
+
         requestDateMap({
           entitykey: this.itemData.entitykey,
           startingTime: V1,
           endingTime: V2,
-          page: 0,
+          page: res1,
           rows: 100
         })
-          .then(res=>{});
-        this.progressFlag = true;
-        this.title = 30;
+          .then(res=>{
+            this.progressFlag = true;
+            pagenum = res.page + 1;
+            let num = res.page / res2;
+            this.title = parseInt( num * 100);
+
+            for(let i = 0; i < res.value.length; i++){
+              this.chartOption.series.data.unshift(res.value[i][0]);
+              this.chartOption.xAxis.data.unshift(res.value[i][1]);
+            }
+            this.initEcharts(this.chartOption);
+            this.progressLoading(pagenum, res.pages);
+          });
       },
-      dateChange(){
-        // 添加历史记录确认事件，请求数据
-        let v1 = new Date(this.timeInterval[0]);
-        let V1 = v1.getTime();
-        let v2 = new Date(this.timeInterval[1]);
-        let V2 = v2.getTime();
-        let that = this;
-        requestDateMap({
-          entitykey: this.itemData.entitykey,
-          startingTime: V1,
-          endingTime: V2,
-          page:0,
-          rows: 2
-        })
-          .then(res => {
-          console.log(res);
-          // 判断当前的页码数是否大于1，如果大于1，则为大数据，提示用户
-          if(res.pages > res.page){
-            this.openModel(res.page, res.pages, this.progressLoading);
-          }else if(res.pages === 0){
+      dataChange(val){
+        if (val) {
+          // 添加历史记录确认事件，请求数据
+          let v1 = new Date(this.timeInterval[0]);
+          let V1 = v1.getTime();
+          let v2 = new Date(this.timeInterval[1]);
+          let V2 = v2.getTime();
+          requestDateMap({
+            entitykey: this.itemData.entitykey,
+            startingTime: V1,
+            endingTime: V2,
+            page:0,
+            rows: 300
+          })
+            .then(res => {
+              // 判断当前的页码数是否大于1，如果大于1，则为大数据，提示用户
+              if(res.pages > res.page+1){
+                this.openModel(res.page, res.pages, this.progressLoading);
+              }else if(res.pages === 0){
+                this.open("当前时间段没有数据",function(){});
+                this.emptyEcharts();
+              }else{
+                window.clearInterval(timer1);
+                this.chastate = 1;
+                this.emptyEcharts();
 
-          }else{
-            window.clearInterval(timer1);
-            this.chastate = 1;
-            this.emptyEcharts();
-
-            this.saveDate(res);
-            this.myCharts.hideLoading();
-
-          }
-        });
-
+                for(let i = 0; i < res.value.length; i++){
+                  this.option.series.data.unshift(res.value[i][0]);
+                  this.option.xAxis.data.unshift(res.value[i][1]);
+                }
+                this.initEcharts(this.chartOption);
+                this.myCharts.hideLoading();
+              }
+            });
+        }
       },
-    },
-    beforeMount() {
-      console.log(this.itemData);
     },
     mounted() {
       this.myCharts = this.$echarts.init(document.getElementById(this.divId));
       this.setTime();
-      this.chartOption = options;
     },
     watch: {
       chartOption(val) {
         this.myCharts.setOption(val);
       },
-      entitykey1(val) {
-        // 监测entityState的变化
-        if(val===1){
+      chastate(val) {
+        if (val === 1) {
           this.myCharts.showLoading({text:"读取数据中..."});
 
-          this.option.series.data.splice(0,this.option.series.data.length);
-          this.option.xAxis.data.splice(0,this.option.xAxis.data.length);
-          this.initEcharts(this.chartOption());
+          this.chartOption.series.data.splice(0,this.chartOption.series.data.length);
+          this.chartOption.xAxis.data.splice(0,this.chartOption.xAxis.data.length);
           this.chastate = 0;
           this.currentId = 0;
-          this.timeInterval = "";
           this.myCharts.clear();
           this.firstrequest = true;
-          requestBeginTime({ entitykey: this.itemData.entitykey }).then(res=>{
-            if(res !== ""){
-              let time = new Date(res);
-              this.startTime = time.getTime();
-            }
+          requestBeginTime({
+            entitykey: this.itemData.entitykey
           })
-          // console.log(Store.state.datatree.entitykey);
+            .then(res=>{
+            //TODO: startTime  抽离成一个组件内部状态
+            // if(res !== ""){
+            //   let time = new Date(res);
+            //   Store.commit('START_TIME', { startTime: time.getTime() });
+            //   console.log(res)
+            // }
+          })
         }
       }
     },
-
   }
 </script>
 

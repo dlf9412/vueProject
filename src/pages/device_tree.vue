@@ -31,7 +31,8 @@
                                     </span>
                             </span>
 
-                        </el-tree>
+                        </el-tree>                       
+                        
                     </div>
                     <el-button-group style="float:left;margin-bottom:0.5em;display:none;">
                         <el-button type="primary" size="mini" icon="el-icon-arrow-up" alt="上移" @click="node_up()"></el-button>
@@ -142,6 +143,8 @@ Vue.use(Tabs);
 Vue.use(TabPane);
 Vue.use(Pagination);
 
+let trees = {};
+let treeis=true;
 export default {
   props: {
     device_tree: {
@@ -329,15 +332,35 @@ export default {
       console.log(`当前页: ${val}`);
     },
     insdevtotree(id, idx) {
-      console.log(`ins dev to tree: ${id},${idx}`);
-      let tmpnode = this.$refs.tree.getCheckedNodes()[0];
-      if (tmpnode == null) {
-        tmpnode = this.treedata[this.treedata.length - 1];
-      }
-      this.$refs.tree.insertAfter({
-          id: this.seldevlst[idx].id,
-          label: this.seldevlst[idx].label
-        },tmpnode);
+      
+      	let tmpnode = this.$refs.tree.getCheckedNodes()[0];
+     
+     	for(var index in trees.children){  
+	        //console.log(trees.children[index].label);
+	        if(trees.children[index].label==this.seldevlst[idx].label){
+	        	this.$message({
+		          showClose: true,
+		          message: '模板已添加！',
+		          type: 'error'
+		        });
+		        treeis=false;
+		        break;
+	        }else{
+	        	treeis=true;
+	        }
+	    }
+
+ 		if(treeis){
+ 			const newChild = { id: this.seldevlst[idx].id, label: this.seldevlst[idx].label, children: [] };
+	        if (!trees.children) {
+	          this.$set(trees, 'children', []);
+	        }
+	        trees.children.push(newChild);
+	    } 
+	    treeis=true;
+      
+       console.log(this.treedata);
+      
     },
     instmptotree(id, idx) {
       console.log(`ins tmp to tree: ${id},${idx}`);
@@ -386,7 +409,8 @@ export default {
       console.log("--data--");
       console.log(data);
       console.log("--node--");
-      console.log(node);
+      trees=data;
+      console.log(trees);
       // this.i++;
       //if (this.i % 2 == 0) {
       if (node) {

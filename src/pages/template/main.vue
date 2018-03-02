@@ -8,15 +8,9 @@
               </div>
               <div class="_list" >
                  <div class="center">
-                      <div class="_listChild" v-for="(option,index) in arr"  >
-                      <div class="boxItem" @click="changeStyle(index)" :class="addIndex==index?'changeColor':'boxItem'">
-                          <span class="el-icon-printer"></span>
-                          <div class="box">
-                              <p>{{option.label}}</p>
-                              <div>{{option.child[0].label}}</div>
-                              <div>{{option.child[1].label}}</div>
-                          </div>
-                      </div>
+                      <div class="_listChild" v-for="(option,index) in arr" @click="changeStyle(index)" :class="addIndex==index?changeColor=true:changeColor=false"  >
+                      <!-- 卡片组件 -->
+                      <card :label="option.label" :children-note="option.child" ></card>
                   </div>
               </div>
 
@@ -32,6 +26,9 @@
                             :total=total>
                         </el-pagination>
                   </div>
+                  <!-- <paging :page-sizes="[10, 20, 30]" :total=3  :current-page="currentPage4">
+                  </paging> -->
+                  
               </div>
            </div>
 
@@ -58,10 +55,14 @@
   </div>
 </template>
 <script>
-
+import Paging from "@/components/card/paging"
+import Card from "@/components/card/card"
 
 export default {
   name:"mainTemplate",
+  components: {
+      Paging,Card
+  },
   data(){
       return{
         active: 1,
@@ -70,7 +71,7 @@ export default {
         visibleWidth:0,
         boxWidth:0,
         listBox:0,
-        changeColor:true,
+        changeColor:false,
         boxItem:true,
         addIndex:-1,
         currentPage4: 5,
@@ -101,7 +102,7 @@ export default {
             "child":[
                 {"label":"子节点1"},
                 {"label":"子节点2"}
-            ]}],
+            ]},],
             defaultProps: {
                 children: 'child',
                 label: 'label'
@@ -143,17 +144,20 @@ export default {
       },
       initHeight(){
         //   设置高度
+        if (document.getElementsByClassName("_listChild").length !== 0) {
           let midHeight=document.getElementsByClassName('middle')[0];
           let listHeight=document.getElementsByClassName('_list')[0];
           listHeight.style.height=this.maxHeight+70+"px";
           midHeight.style.height=document.getElementsByClassName('left')[0].offsetHeight;
+        }
       },
       getInfo(){
         //  求取列数
-        this.boxWidth=document.getElementsByClassName("_listChild")[0].offsetWidth;
-        this.visibleWidth=document.getElementsByClassName("_list")[0].offsetWidth;
-        this.colNum=parseInt(this.visibleWidth/this.boxWidth);
-
+        if (document.getElementsByClassName("_listChild").length !== 0) {
+          this.boxWidth=document.getElementsByClassName("_listChild")[0].offsetWidth;
+          this.visibleWidth=document.getElementsByClassName("_list")[0].offsetWidth;
+          this.colNum=parseInt(this.visibleWidth/this.boxWidth);
+        }
       },
       initWidth(){
         //   重置父级盒子的宽度

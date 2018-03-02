@@ -6,7 +6,7 @@
       <el-step title="子设备信息" icon="el-icon-mobile-phone"/>
     </el-steps>
     <router-view/>
-    <div style="clear: both">
+    <div class="nextbutton">
       <el-button type="primary" style="margin-top: 12px;" @click="next">下一步</el-button>
       <el-button type="primary" style="margin-top: 12px;" @click="reset">重置</el-button>
     </div>
@@ -43,5 +43,15 @@
 <style lang="less" scoped>
   .el-steps {
     margin: 20px 0;
+  }
+
+  .nextbutton {
+    clear: both;
+    padding-bottom: 10px;
+    position: fixed;
+    width: 85%;
+    background-color: white;
+    border:1px solid #20a0ff;
+    bottom: 0;
   }
 </style>

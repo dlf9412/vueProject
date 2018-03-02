@@ -28,9 +28,9 @@
   }
 
 
-.map {
-  width: 400px;
-  height: 200px;
+.equipment_map {
+  width: 560px;
+  height: 260px;
 }
 .BMap_cpyCtrl.BMap_noprint.anchorBL,.anchorBL{ display: none;}
 .el-steps{ margin: 20px 0;}
@@ -64,7 +64,6 @@
 /*  .equipment_form .el-input{ width: 50%;}*/
   .equipment_form .el-button{ margin-left: 8px;}
   .equipment_form .attrs{ width: 110px; margin-right: 10px;}
-  .attr_cont{ }
   .additem .el-form-item:nth-child(1){ float: left; z-index: 2;}
   .attr_conts {  float: left; }
   .attr_conts .el-input{ width: 466px;}
@@ -91,7 +90,7 @@
 
 	  <el-form-item label="设备位置">
 	    <!--百度地图组件-->
-  		<baidu-map class="map" :scroll-wheel-zoom="true" :center="form.center" :zoom="form.zoom" @click="clickMap">
+  		<baidu-map class="equipment_map" :scroll-wheel-zoom="true" :center="form.center" :zoom="form.zoom" @click="clickMap">
         <bm-marker :position="{lng: form.ico_location.lng, lat: form.ico_location.lat}" :dragging="true" @dragend="clickMap"></bm-marker>
 	    </baidu-map>
 	  </el-form-item>
@@ -138,10 +137,10 @@
 	    <el-button type="primary" @click="addDomain">新增属性</el-button>
 	  </el-form-item>
 
-	  <el-form-item>
+	  <!--<el-form-item>
 	    <el-button type="primary" @click="onSubmit('form')">下一步</el-button>
 	    <el-button>取消</el-button>
-	  </el-form-item>
+	  </el-form-item>-->
 
 
 	</el-form>
@@ -151,21 +150,21 @@
 
 <script>
   import Vue from 'vue';
-  import { Button, Col, Row, Notification, MessageBox, Collapse, CollapseItem,steps,step,upload,dialog } from 'element-ui';
+  // import { Button, Col, Row, Notification, MessageBox, Collapse, CollapseItem,steps,step,upload,dialog } from 'element-ui';
   import BaiduMap from 'vue-baidu-map'
 
 	Vue.use(BaiduMap, {
 	  ak: '8c3e3a75d8742ead58b80b92fd635977'
 	})
-  Vue.use(Button);
-  Vue.use(Col);
-  Vue.use(Row);
-  Vue.use(Collapse);
-  Vue.use(CollapseItem);
-  Vue.use(steps);
-  Vue.use(step);
-  Vue.use(upload);
-  Vue.use(dialog);
+  // Vue.use(Button);
+  // Vue.use(Col);
+  // Vue.use(Row);
+  // Vue.use(Collapse);
+  // // Vue.use(CollapseItem);
+  // Vue.use(steps);
+  // Vue.use(step);
+  // Vue.use(upload);
+  // Vue.use(dialog);
 
 
   export default {

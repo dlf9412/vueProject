@@ -20,7 +20,7 @@
   </div>
 </template>
 <script>
-import mainTemplate "@/pages/template/combination";
+import mainTemplate from "@/pages/template/main";
 export default {
   name:"combination",
   data(){

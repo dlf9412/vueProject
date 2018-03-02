@@ -11,7 +11,7 @@
               <template v-else>
                 <span class="description">{{item.description}}</span>
                 <el-input v-model="model[item.name]" :disabled="disabled"/>
-                <el-button @click="onClick(item, index)">{{buttonName}}</el-button>
+                <el-button @click="onClick(item, item.name)">{{buttonName}}</el-button>
               </template>
             </el-form-item>
           </el-col>
@@ -61,10 +61,10 @@
       }
     },
     methods: {
-      onClick(item, index) {
-        console.log(this.$refs.variableForm.model[index.toString()]);
-        if (this.$refs.variableForm.model[index.toString()] !== '') {
-          sendDataPoint({ entitykey: item.entitykey, key: this.$refs.variableForm.model[index.toString()] })
+      onClick(item, modelName) {
+        console.log(this.$refs.variableForm.model[modelName]);
+        if (this.$refs.variableForm.model[modelName] !== '') {
+          sendDataPoint({ entitykey: item.entitykey, key: this.$refs.variableForm.model[modelName] })
             .then(res=>{
               if (res) {
                 Notification({
