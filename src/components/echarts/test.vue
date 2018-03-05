@@ -99,9 +99,9 @@
       }
     },
     methods: {
-      initEcharts(res){
-        
-      },
+      // initEcharts(res){
+      //   this.loadState=false;
+      // },
       saveDate(res) {
         // 存储数据
         if(this.currentId !== res.id){
@@ -124,7 +124,7 @@
         // 清空数据和基本配置
         
         if(this.chastate === 1){
-          
+          this.loadState=true;
           this.dataArr.splice(0, this.dataArr.length);
           this.timeInterval = '';
           this.chastate = 0;
@@ -143,6 +143,7 @@
             // debugger
             this.emptyEcharts();
             // this.myCharts.hideLoading();
+            this.loadState=false;
             if(res.value !== "" && res.value !== undefined && res.value !== null){
               this.saveDate(res);
             }
@@ -153,6 +154,7 @@
         this.chastate = 1;
         this.firstrequest = true;
         this.acceptData();
+        this.loadState=true;
         // this.myCharts.showLoading({text:"读取数据中..."});
 
         let that = this;
@@ -210,6 +212,7 @@
         if(res1 > res2){
           // this.initEcharts
           // (this.chartOption);
+          
           this.closeProgress();
           this.open("当前数据已经加载完毕",function(){});
 
@@ -265,7 +268,8 @@
                 for(let i = 0; i < res.value.length; i++){
                  this.dataArr.unshift(res.value[i]);
                 }
-                // this.initEcharts(this.chartOption);
+                // this.initEcharts();
+                this.loadState=false;
                 // this.myCharts.hideLoading();
               }
             });
@@ -281,7 +285,7 @@
       chastate(val) {
         if (val === 1) {
           // this.myCharts.showLoading({text:"读取数据中..."});
-
+          this.loadState=true;
           this.dataArr.splice(0,this.dataArr.length);
           this.chastate = 0;
           this.currentId = 0;

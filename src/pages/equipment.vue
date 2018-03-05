@@ -90,9 +90,12 @@
 
 	  <el-form-item label="设备位置">
 	    <!--百度地图组件-->
-  		<baidu-map class="equipment_map" :scroll-wheel-zoom="true" :center="form.center" :zoom="form.zoom" @click="clickMap">
+	    <sh-map ref="sh" :data="form.center" :zoom="form.zoom" @getdata="getdata" />
+	    
+  		<!--<baidu-map class="equipment_map" :scroll-wheel-zoom="true" :center="form.center" :zoom="form.zoom" @click="clickMap">
         <bm-marker :position="{lng: form.ico_location.lng, lat: form.ico_location.lat}" :dragging="true" @dragend="clickMap"></bm-marker>
-	    </baidu-map>
+	    </baidu-map>-->
+	    
 	  </el-form-item>
 
 	  <el-form-item label="设备图片">
@@ -150,22 +153,20 @@
 
 <script>
   import Vue from 'vue';
-  // import { Button, Col, Row, Notification, MessageBox, Collapse, CollapseItem,steps,step,upload,dialog } from 'element-ui';
-  import BaiduMap from 'vue-baidu-map'
+  //import { Button, Col, Row, Notification, ,step,upload,dialog } from 'element-ui';
+  //import BaiduMap from 'vue-baidu-map'
 
-	Vue.use(BaiduMap, {
+/*	Vue.use(BaiduMap, {
 	  ak: '8c3e3a75d8742ead58b80b92fd635977'
-	})
-  // Vue.use(Button);
-  // Vue.use(Col);
-  // Vue.use(Row);
-  // Vue.use(Collapse);
-  // // Vue.use(CollapseItem);
-  // Vue.use(steps);
-  // Vue.use(step);
-  // Vue.use(upload);
-  // Vue.use(dialog);
+	})*/
+/*  Vue.use(Button);
+  Vue.use(Col);
+  Vue.use(Row);
+  Vue.use(step);
+  Vue.use(upload);
+  Vue.use(dialog);*/
 
+  import ShMap from "../components/shmap/index";
 
   export default {
 
@@ -182,14 +183,14 @@
             value: ''
           }],
           ico_location: {
-		        lng: 118.070002,
-		        lat: 24.599196
+		        lng: 118.070022,
+		        lat: 24.599133
 		      },
 		      center: {
-		        lng: 118.070002,
-		        lat: 24.599196
+		        lng: 118.070022,
+		        lat: 24.599133
 		      },
-		      zoom: 15,
+		      zoom: 16,
 		      active: 2,
 		      dialogImageUrl: '',
 	        dialogVisible: false
@@ -198,12 +199,12 @@
       }
     },
     methods: {
-	    clickMap (e) {
+	    /*clickMap (e) {
 	    	//点击地图更新标注位置
 	      this.form.ico_location.lng = e.point.lng
 	      this.form.ico_location.lat = e.point.lat
 
-	    },
+	    },*/
       onSubmit(formName) {
       	//验证并提交表单
       	console.log(this.form.domains)
@@ -238,9 +239,16 @@
           value: '',
           keys: ''
         });
+      },
+      getdata(d) {	//地图子组件返回的值
+      	console.log(d);
       }
     },
+    components: {
+	    ShMap
+		},
     mounted(){
+    	
 
 
 

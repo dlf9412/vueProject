@@ -1,30 +1,20 @@
 <template>
   <el-container>
     <el-container>
-      <el-aside width="15%">
-        <el-menu
-          class="side-nav"
-          @select="menuSelected"
-          background-color="#001529"
-          text-color="#f2f2f2"
-          router
-          :default-active="$route.path"
-          active-text-color="#45B0EE">
-          <NavMenu :navMenus="leftMenus"/>
-        </el-menu>
-      </el-aside>
+      <sh-menu
+        :data="leftMenus"
+      />
       <el-main>
-        <router-view />
+        <router-view/>
       </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script>
-  import NavMenu from './navmenu';
+  import ShMenu from './shmenu'
 
   export default {
-    name: 'ShMenu',
     mixins: [],
     extends: {},
     props: {},
@@ -66,17 +56,19 @@
               }
             ]
           }
-        ]
+        ],
       }
     },
     computed: {},
-    components: {NavMenu},
+    components: {
+      ShMenu
+    },
     watch: {},
     methods: {
       menuSelected(index, indexPath) {
         console.log(index);
         console.log(indexPath);
-      }
+      },
     },
     beforeCreate() {
     },

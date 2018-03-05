@@ -161,6 +161,11 @@ function drawLineAndBar(chartData,id,titleText,xText,yText,loadingState) {
     var chart = echarts.init(document.getElementById(id))
     var xAxisData = chartData.map(function (item) {return item[1]})
     var yAxisData = chartData.map(function (item) {return item[0]})
+    if(loadingState==false){
+      chart.showLoading({text:"读取数据中..."});
+    }else{
+      chart.hideLoading();
+    }
     chart.setOption({
       tooltip: {
         trigger: 'axis'
@@ -232,13 +237,12 @@ function drawLineAndBar(chartData,id,titleText,xText,yText,loadingState) {
     var chart = echarts.init(document.getElementById(id))
     var xAxisData = chartData.map(function (item) {return item[1]})
     var pieData = chartData.map(function (item) {return item[0]})
-    // var pieData = []
-    // chartData.forEach((v,i)=>{
-    //   pieData.push({
-    //     name:v[0],
-    //     value:v[1]
-    //   })
-    // })
+    if(loadingState==false){
+      chart.showLoading({text:"读取数据中..."});
+    }else{
+      chart.hideLoading();
+    }
+    
     chart.setOption({
           title: {
             text: titleText

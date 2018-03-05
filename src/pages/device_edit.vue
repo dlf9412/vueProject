@@ -16,7 +16,7 @@
                 <div id="right-info"  style="display:inline-block;width:32em;height:51em;text-align:left;float:left;">
                    <div style="display:inline-block;width:100%;height:98%;overflow-y:auto;border: 1px solid #cccccc;">
                       <div v-for="(item, index) in dev_property" style="white-space:nowrap;">
-                          <el-input size="mini" v-if="!item.off_del" v-model="item.label" placeholder="属性名称" style="width:18%;"></el-input>
+                          <el-input size="mini" v-if="!item.off_del" v-model="item.name" placeholder="属性名称" style="width:18%;"></el-input>
                           <el-tag size="small" v-if="item.off_del" style="width:18%;color:#333333;">{{ item.label }}</el-tag>
                           <el-input size="mini" v-model="item.value" placeholder="属性内容" style="width:71%;"></el-input>
                           <el-button type="danger" size="mini" plain v-if="!item.off_del" icon="el-icon-circle-close-outline" @click="remove_property(index)" style="color:#ff0000;"></el-button>
@@ -90,15 +90,15 @@ export default {
       ifotime: "2018-02-24 14:02",
       ifophone: "0592-400XXXXXXX",
       dev_property: [
-        { label: "名称", key: "name", value: "温度计-1", off_del: true },
-        { label: "型号", key: "type", value: "大型", off_del: true },
-        { label: "类型", key: "model", value: "外挂式", off_del: true },
-        { label: "参数1", key: "param1", value: "2018-02-24", off_del: false },
-        { label: "", key: "", value: "", off_del: false },
-        { label: "", key: "", value: "", off_del: false },
-        { label: "", key: "", value: "", off_del: false },
-        { label: "", key: "", value: "", off_del: false },
-        { label: "", key: "", value: "", off_del: false }
+        { name: "名称", key: "name", value: "温度计-1", off_del: true },
+        { name: "型号", key: "type", value: "大型", off_del: true },
+        { name: "类型", key: "model", value: "外挂式", off_del: true },
+        { name: "参数1", key: "param1", value: "2018-02-24", off_del: false },
+        { name: "", key: "", value: "", off_del: false },
+        { name: "", key: "", value: "", off_del: false },
+        { name: "", key: "", value: "", off_del: false },
+        { name: "", key: "", value: "", off_del: false },
+        { name: "", key: "", value: "", off_del: false }
       ],
       notes: "",
       notes_advanced: "",
@@ -117,7 +117,7 @@ export default {
     },
     add_property() {
       //增加一项属性
-      this.dev_property.push({ label: "", key: "", value: "", off_del: false });
+      this.dev_property.push({ name: "", key: "", value: "", off_del: false });
     },
     advanced_show() {
       //显示高级特性

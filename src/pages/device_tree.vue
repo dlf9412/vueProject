@@ -6,32 +6,8 @@
                 <div id="tree-pannel">
                     <div style="display:inline-block;width:100%;height:1.5em;border: 1px solid #888888;">{{ currentname }}</div>
                     <div id="tree-container" style="display:inline-block;width:96%;height:72%;overflow-y:auto;">
-                        <el-tree
-                            :data="treedata"
-                            show-checkbox
-                            node-key="id"
-                            :props="defaultProps"
-                            :highlight-current="true"
-                            style="background:#cccccc;height:100%;"
-                            default-expand-all
-                            :expand-on-click-node="true"
-                            :indent="32"
-                            ref="tree"
-                            check-strictly
-                            @check-change="handleTreeClick"
-                            ><span class="custom-tree-node" slot-scope="{ node, data }">
-                                    <span>{{ node.label }}</span>
-                                    <span>
-                                      <el-button
-                                        type="text"
-                                        size="mini"
-                                        @click="() => remove(node, data)">
-                                        删除
-                                      </el-button>
-                                    </span>
-                            </span>
-
-                        </el-tree>                       
+                    	<!--树形组件-->
+	    				<sh-tree ref="sh" :onadd="onadd" :data="treedata" :indent="20" :treenode="{id: treenode.id, label: treenode.label}" :show-checkbox="true" :default-expand-all="true" :check-strictly="true" :show-del-node="true" @getdata="getdata"/>
                         
                     </div>
                     <el-button-group style="float:left;margin-bottom:0.5em;display:none;">
@@ -67,7 +43,7 @@
                                         <span>基本参数：{{ seldev.param }}</span> <br />
                                         <div class="bottom clearfix">
                                             <el-button-group style="float:right;bottom:0.8em;position:absolute;">
-                                                <el-button type="primary" size="mini" icon="el-icon-back" @click="insdevtotree(seldev.id,index)"></el-button>
+                                                <el-button type="primary" size="mini" icon="el-icon-back" @click="insdevtotree(seldev.id,seldev.label)"></el-button>
                                                 <el-button type="primary" size="mini" icon="el-icon-edit" @click="editdev(seldev.id,index)"></el-button>
                                             </el-button-group>
                                         </div>
@@ -122,7 +98,7 @@ import {
   Row,
   Notification,
   MessageBox,
-  Tree,
+  /*Tree,*/
   Card,
   ButtonGroup,
   Tabs,
@@ -130,12 +106,17 @@ import {
   Pagination
 } from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
+
+import ShTree from "../components/shtree/index";
+
 import Vue from "vue";
+
+Vue.component('ShTree', ShTree);
 
 Vue.use(Input);
 Vue.use(Col);
 Vue.use(Row);
-Vue.use(Tree);
+/*Vue.use(Tree);*/
 Vue.use(Card);
 Vue.use(Button);
 Vue.use(ButtonGroup);
@@ -143,8 +124,6 @@ Vue.use(Tabs);
 Vue.use(TabPane);
 Vue.use(Pagination);
 
-let trees = {};
-let treeis=true;
 export default {
   props: {
     device_tree: {
@@ -154,6 +133,11 @@ export default {
   data: function() {
     return {
       visible: false,
+      onadd: 1,	//监听点击添加子节点
+      treenode: {
+        id: '',
+        label: ''
+      },
       currentname: "通用菜地设备",
       seldevlst: [
         //可选的设备列表
@@ -235,19 +219,23 @@ export default {
       ],
       treedata: [
         {
-          id: 2001,
+          id: 1001,
+          device_id: "2001",
           label: "通讯设备1",
           children: [
             {
-              id: 2004,
+              id: 1002,
+              device_id: "2004",
               label: "控制器",
               children: [
                 {
-                  id: 2009,
+                  id: 1003,
+                  device_id: "2009",
                   label: "空气温度"
                 },
                 {
-                  id: 2010,
+                  id: 1004,
+                  device_id: "2010",
                   label: "空气湿度"
                 }
               ]
@@ -255,34 +243,19 @@ export default {
           ]
         },
         {
-          id: 2002,
+          id: 1005,
+          device_id: "2002",
           label: "通讯设备2",
           children: [
             {
-              id: 2005,
+              id: 1006,
+              device_id: "2005",
               label: "光照度"
             },
             {
-              id: 2006,
+              id: 1007,
+              device_id: "2006",
               label: "空气PH值"
-            }
-          ]
-        },
-        {
-          id: 2003,
-          label: "通讯设备3",
-          children: [
-            {
-              id: 2007,
-              label: "土壤PH值"
-            },
-            {
-              id: 2008,
-              label: "土壤温度"
-            },
-            {
-              id: 2010,
-              label: "土壤湿度"
             }
           ]
         }
@@ -291,15 +264,11 @@ export default {
       currentPage2: 2,
       currentPage3: 3,
       currentPage4: 4,
-      defaultProps: {
-        children: "children",
-        label: "label"
-      },
       textarea: ""
     };
   },
   methods: {
-    append(data) {
+    /*append(data) {
       const newChild = { id: id++, label: "testtest", children: [] };
       if (!data.children) {
         this.$set(data, "children", []);
@@ -324,42 +293,21 @@ export default {
         "</span>" +
         "</span>"
       );
-    },
+    },*/
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
+      
     },
-    insdevtotree(id, idx) {
-      
-      	let tmpnode = this.$refs.tree.getCheckedNodes()[0];
-     
-     	for(var index in trees.children){  
-	        //console.log(trees.children[index].label);
-	        if(trees.children[index].label==this.seldevlst[idx].label){
-	        	this.$message({
-		          showClose: true,
-		          message: '模板已添加！',
-		          type: 'error'
-		        });
-		        treeis=false;
-		        break;
-	        }else{
-	        	treeis=true;
-	        }
-	    }
-
- 		if(treeis){
- 			const newChild = { id: this.seldevlst[idx].id, label: this.seldevlst[idx].label, children: [] };
-	        if (!trees.children) {
-	          this.$set(trees, 'children', []);
-	        }
-	        trees.children.push(newChild);
-	    } 
-	    treeis=true;
-      
-       console.log(this.treedata);
+    insdevtotree(id, label) {
+		
+    	this.treenode.id=id;
+    	this.treenode.label=label;
+    	this.onadd=this.onadd+1;
+    	
+    	//console.log(this.onadd);
       
     },
     instmptotree(id, idx) {
@@ -405,24 +353,6 @@ export default {
     saveAsTmpToServer() {
       console.log(this);
     },
-    handleTreeClick(data, node) {
-      console.log("--data--");
-      console.log(data);
-      console.log("--node--");
-      trees=data;
-      console.log(trees);
-      // this.i++;
-      //if (this.i % 2 == 0) {
-      if (node) {
-        this.$refs.tree.setCheckedNodes([]);
-        this.$refs.tree.setCheckedNodes([data]);
-        //交叉点击节点
-      } else {
-        this.$refs.tree.setCheckedNodes([]);
-        //点击已经选中的节点，置空
-      }
-      // }
-    },
     //递归遍历树数据
     setDataToTree(treeData, pId, respData) {
       for (var i = 0; i < treeData.length; i++) {
@@ -435,22 +365,13 @@ export default {
           this.setDataToTree(td.children, pId, respData);
         }
       }
-      /*
-      // 广度优先遍历
-// data 就是ElementUI的Tree组件里那个data
-let node = [data]
-let ok = false
-let result // 包含你说的那个子节点的父节点
-while (!ok) {
-    let item = node.shift()
-    if (item.id == id) {
-        result = item
-        ok = true
-    } else if (item.children && item.children.length > 0) {
-        node = node.concat(item.children)
-    }
-}*/
-    }
+    },
+    components: {
+	    ShTree
+	},
+	getdata(d) {	//树子组件返回的值
+      	//console.log(d);
+      }
   }
 };
 </script>
@@ -506,13 +427,6 @@ h1 a {
   margin: auto;
 }
 
-.custom-tree-node {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 14px;
-  padding-right: 8px;
-}
+
 </style>
 
